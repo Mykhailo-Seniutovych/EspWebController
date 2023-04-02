@@ -6,10 +6,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#define STATUS_LED_PORT GPIOC
+#define STATUS_LED_PIN GPIO_PIN_13
 #define RED_LED_PORT GPIOB
-#define RED_LED_PIN GPIO_PIN_10
+#define RED_LED_PIN GPIO_PIN_11
 #define GREEN_LED_PORT GPIOB
-#define GREEN_LED_PIN GPIO_PIN_11
+#define GREEN_LED_PIN GPIO_PIN_10
 
 extern UART_HandleTypeDef huart2;
 
@@ -17,7 +19,7 @@ bool isGreenLedOn = false;
 bool isRedLedOn = false;
 
 static void executeCommand(EspServer &espServer, EspCommand command);
-static const char * toBoolString(bool boolean);
+static const char *toBoolString(bool boolean);
 
 int appMain() {
     auto config = EspServerConfig();
@@ -26,7 +28,14 @@ int appMain() {
     config.wifiPassword = "password";
 
     auto espServer = EspServer(&huart2, &config);
-    espServer.initializeTcpServer();
+    auto initSuccess = espServer.initializeTcpServer();
+    if (!initSuccess) {
+        return -1;
+    }
+
+    HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_RESET);
+    HAL_Delay(2000);
+    HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_SET);
 
     while (1) {
         auto command = espServer.waitForCommand();
@@ -60,6 +69,6 @@ static void executeCommand(EspServer &espServer, EspCommand command) {
     }
 }
 
-static const char * toBoolString(bool boolean) {
+static const char *toBoolString(bool boolean) {
     return boolean ? "true" : "false";
 }
