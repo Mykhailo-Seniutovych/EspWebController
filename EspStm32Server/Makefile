@@ -61,7 +61,7 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_usart.c
 
 CXX_SOURCES = \
 Core/Src/app-main.cpp \
-Core/Src/esp-uart.cpp
+Core/Src/esp-server.cpp
 
 # ASM sources
 ASM_SOURCES =  \

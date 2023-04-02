@@ -3,6 +3,7 @@
     "C_Cpp.intelliSenseEngine": "default",
     "cortex-debug.variableUseNaturalFormat": true,
     "files.associations": {
-        "main.h": "c"
+        "main.h": "c",
+        "regex": "cpp"
     }
 }
